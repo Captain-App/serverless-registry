@@ -6,13 +6,16 @@
   "main": "index.ts",
   "scripts": {
     "deploy": "wrangler deploy --minify --env production",
+    "deploy:nomos": "wrangler deploy --minify --config deploy/nomos.wrangler.jsonc",
+    "deploy:nomos:dry-run": "wrangler deploy --dry-run --outdir .wrangler/nomos-dry-run --config deploy/nomos.wrangler.jsonc",
     "dev:miniflare": "wrangler dev --env dev --port 9999 --live-reload",
     "generate-types": "wrangler types --config test/wrangler.test.jsonc --include-env=false",
     "typecheck": "pnpm run generate-types && tsc --noEmit && tsc --noEmit --project test/tsconfig.json && tsc --noEmit --project push/tsconfig.json",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "check": "pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm run test && pnpm run deploy:nomos:dry-run"
   },
   "dependencies": {
     "@tsndr/cloudflare-worker-jwt": "^3.2.2",

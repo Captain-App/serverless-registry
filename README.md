@@ -1,5 +1,9 @@
 # Container Registry in Workers
 
+Captain App's Nomos deployment and operating contract are documented in
+[`docs/nomos-kernel-registry.md`](docs/nomos-kernel-registry.md). The registry
+implementation remains an upstream-compatible fork of Cloudflare's project.
+
 This repository contains a container registry implementation in Workers that uses R2.
 
 It supports all pushing and pulling workflows. It also supports
