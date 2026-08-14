@@ -35,9 +35,13 @@ custom domain does not permit anonymous pulls. No credential is committed here.
 Bootstrap uses Worker secrets `USERNAME` and `PASSWORD` for a registry-only
 publisher. Host applications must not embed that credential. The intended
 steady state is `JWT_REGISTRY_TOKENS_PUBLIC_KEY` in the Worker, with RAN's
-provider adapter issuing short-lived, repository-scoped `pull` or `push`
-capabilities. Switching to JWT replaces Basic authentication; the registry does
-not enable both modes simultaneously.
+provider adapter issuing short-lived capabilities. The upstream JWT payload
+currently limits only the broad `pull` and `push` actions; it does not bind
+authority to an OCI repository and is therefore not yet a tenant boundary.
+Before Nomos.cafe accepts user-published domains, extend that claim and verifier
+with exact repository/action scopes and contribute the generic change upstream.
+Switching to JWT replaces Basic authentication; the registry does not enable
+both modes simultaneously.
 
 ## Retention and garbage collection
 
@@ -53,8 +57,11 @@ The production Worker is `nomos-kernel-registry`, backed by the R2 bucket of the
 same name and served only at `registry.nomos.cafe`.
 
 Before the first deploy, create the bucket and set authentication secrets using
-Wrangler against `deploy/nomos.wrangler.jsonc`. Never pass a secret on the
-command line or place it in this repository.
+Wrangler against `deploy/nomos.wrangler.jsonc`. The file directly names the
+production Worker and does not declare a Wrangler environment, so do not pass
+`--env production`: that would create credentials for a different, unused
+deployment. Never pass a secret on the command line or place it in this
+repository.
 
 Run the complete local gate with:
 
